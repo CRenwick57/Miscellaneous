@@ -9,15 +9,18 @@ namespace MasterMindSolver
     class MasterMindSolver
     {
         private List<int[]> guesses;
+        private List<int[]> impossible;
 
         public MasterMindSolver()
         {
             guesses = new List<int[]>();
+            impossible = new List<int[]>();
         }
 
         public void Reset()
         {
             guesses.Clear();
+            impossible.Clear();
             int a = 1, b = 1, c = 1, d = 1;
             while (a <= 6)
             {
@@ -91,7 +94,7 @@ namespace MasterMindSolver
                 {
                     for (int j = 0; j < 4; j++)
                     {
-                        if (lis2[j] == lis1[i] && !paired2.Contains(j) && !paired1.Contains(i) && lis2[j] != lis1[j])
+                        if (lis2[j] == lis1[i] && !paired2.Contains(j) &&!paired1.Contains(i) && lis2[j] != lis1[j])
                         {
                             close++;
                             paired1.Add(i);
@@ -129,16 +132,20 @@ namespace MasterMindSolver
             Console.WriteLine(guess[3]);
         }
 
+        #region outcomes
         private int[][] outcomes = new int[][] 
         {
             new int[] { 0, 0 }, new int[] { 0, 1 }, new int[] { 0, 2 }, new int[] { 0, 3 }, new int[] { 0, 4 }, new int[]{ 1 , 0 },
             new int[] { 1 , 1 }, new int[] { 1 , 2 }, new int[] { 1 , 3 }, new int[] { 2 , 0 }, new int[] { 2 , 1 }, new int[] { 2 , 2 },
             new int[] { 3 , 0 }, new int[] { 4 , 0 }
         };
+        #endregion
 
         private int[] MiniMax(int game = 0)
         {
-            if (guesses.Count > 35)
+            if (guesses.Count == 1)
+                return guesses[0];
+            if (guesses.Count > 45)
                 Console.WriteLine("Thinking...");
             //create min variable init to the max value of an integer and a mindex variable init to 0
             int min = Int32.MaxValue;
@@ -157,7 +164,7 @@ namespace MasterMindSolver
                     {
                         //in each iteration compare the possibility to the solution
                         //if the result is the same as the current outcome in iteration count++
-                        int[] compare = new int[] { 1, 1, 1, 1 };
+                        int[] compare = new int[] { 1, 1};
                         if (game != 1)
                             compare = Compare(possibility, solution);
                         else
@@ -176,8 +183,38 @@ namespace MasterMindSolver
                     mindex = i;
                 }
             }
-            // once this is complete, return guesses[mindex]
-            return guesses.Pop(mindex);
+            //repeat the process on guesses that are impossible (ruled out of being the right answer but may result in a faster solve if guessed)
+            int mindex2 = -1;
+            for (int i = 0; i < impossible.Count; i++)
+            {
+                int max = 0;
+                int[] possibility = impossible[i];
+
+                foreach (int[] outcome in outcomes)
+                {
+                    int count = 0;
+
+                    foreach (int[] solution in guesses)
+                    {
+                        int[] compare = new int[] { 1, 1, 1, 1 };
+                        if (game != 1)
+                            compare = Compare(possibility, solution);
+                        else
+                            compare = CompareAlt(possibility, solution);
+                        if (compare[0] == outcome[0] && compare[1] == outcome[1])
+                            count++;
+                    }
+                    if (count > max)
+                        max = count;
+                }
+                if (max < min)
+                {
+                    min = max;
+                    mindex2 = i;
+                }
+            }
+                // once this is complete, return guesses[mindex]
+            return (mindex2 == -1 ? guesses.Pop(mindex) : impossible.Pop(mindex2));
         }
 
         public void Solve()
@@ -185,7 +222,7 @@ namespace MasterMindSolver
             Reset();
             int turns = 0;
             bool solved = false;
-            int[] guess = {1,1,2,2};
+            int[] guess = { 1, 1, 2, 2 };
             while (!solved)
             {
                 if (guesses.Count == 0)
@@ -204,9 +241,7 @@ namespace MasterMindSolver
                 int right = 0;
                 string z = string.Empty;
                 while (z.Length == 0)
-                {
                     z = Console.ReadLine();
-                }
                 right = int.Parse(z);
                 if (right >= 4)
                     solved = true;
@@ -216,9 +251,7 @@ namespace MasterMindSolver
                     int close = 0;
                     z = String.Empty;
                     while (z.Length == 0)
-                    {
                         z = Console.ReadLine();
-                    }
                     close = int.Parse(z);
                     int[] score = { right, close };
                     int i = 0;
@@ -228,7 +261,7 @@ namespace MasterMindSolver
                         if (compare[0] == score[0] && compare[1] == score[1])
                             i++;
                         else
-                            guesses.RemoveAt(i);
+                            impossible.Add(guesses.Pop(i));
                     }
                 }
             }
@@ -298,6 +331,6 @@ namespace MasterMindSolver
             else
                 Solve();
         }
-        
+
     }
 }
