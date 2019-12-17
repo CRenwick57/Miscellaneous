@@ -4,6 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//C# command line application that solves the mastermind board game with user input.
+//Changing comments to use minimax or guesses[0] means you either use the slower Knuth 5 Guess algorithm or a faster algorithm that usually takes more guesses.
+//Methods ending with Alt play the "Bulls and Cows" game that uses 4 unique numbers from 1 to 9 instead of 4 numbers from 1-6 that can repeat.
+//Some methods are found in ListExtensions.cs in Extensions repository.
+
 namespace MasterMindSolver
 {
     class MasterMindSolver
