@@ -158,29 +158,52 @@ namespace MasterMindSolver
             //iterate through the possible guesses (as possibility), noting the index of the guess and creating a max variable init to 0
             for (int i = 0; i < guesses.Count; i++)
             {
-                int max = 0;
                 int[] possibility = guesses[i];
-                //in each iteration iterate through every possible outcome and create a count variable init to 0
-                foreach (int[] outcome in outcomes)
+                //create an int[] initialised with 14 zeroes (one for each outcome) called outcomeCounts
+                int[] outcomeCounts = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                //iterate through every possible guess (this time as solution)
+                foreach (int[] solution in guesses)
                 {
-                    int count = 0;
-                    //in each iteration iterate through every guess (this time as solution)
-                    foreach (int[] solution in guesses)
-                    {
-                        //in each iteration compare the possibility to the solution
-                        //if the result is the same as the current outcome in iteration count++
-                        int[] compare = new int[] { 1, 1};
-                        if (game != 1)
-                            compare = Compare(possibility, solution);
-                        else
-                            compare = CompareAlt(possibility, solution);
-                        if (compare[0] == outcome[0] && compare[1] == outcome[1])
-                            count++;
-                    }
-                    //once this is complete, if count > max then max = count
-                    if (count > max)
-                        max = count;
+                    //in each iteration compare the possibility to the solution
+                    //increase a value in outcomeCounts corresponding to the outcome by 1
+                    int[] compare = new int[] { 1, 1, 1, 1 };
+                    if (game != 1)
+                        compare = Compare(possibility, solution);
+                    else
+                        compare = CompareAlt(possibility, solution);
+                    #region Hefty If/Else Statement
+                    if (compare.SequenceEqual(new int[] { 0, 0 }))
+                        outcomeCounts[0]++;
+                    else if (compare.SequenceEqual(new int[] { 0, 1 }))
+                        outcomeCounts[1]++;
+                    else if (compare.SequenceEqual(new int[] { 0, 2 }))
+                        outcomeCounts[2]++;
+                    else if (compare.SequenceEqual(new int[] { 0, 3 }))
+                        outcomeCounts[3]++;
+                    else if (compare.SequenceEqual(new int[] { 0, 4 }))
+                        outcomeCounts[4]++;
+                    else if (compare.SequenceEqual(new int[] { 1, 0 }))
+                        outcomeCounts[5]++;
+                    else if (compare.SequenceEqual(new int[] { 1, 1 }))
+                        outcomeCounts[6]++;
+                    else if (compare.SequenceEqual(new int[] { 1, 2 }))
+                        outcomeCounts[7]++;
+                    else if (compare.SequenceEqual(new int[] { 1, 3 }))
+                        outcomeCounts[8]++;
+                    else if (compare.SequenceEqual(new int[] { 2, 0 }))
+                        outcomeCounts[9]++;
+                    else if (compare.SequenceEqual(new int[] { 2, 1 }))
+                        outcomeCounts[10]++;
+                    else if (compare.SequenceEqual(new int[] { 2, 2 }))
+                        outcomeCounts[11]++;
+                    else if (compare.SequenceEqual(new int[] { 3, 0 }))
+                        outcomeCounts[12]++;
+                    else if (compare.SequenceEqual(new int[] { 4, 0 }))
+                        outcomeCounts[13]++;
+                    #endregion
                 }
+                //take the largest number in outcomeCounts as max
+                int max = outcomeCounts.Max();
                 //once this is complete, if max < min then min = max, and mindex = current index
                 if (max < min)
                 {
@@ -192,36 +215,56 @@ namespace MasterMindSolver
             int mindex2 = -1;
             for (int i = 0; i < impossible.Count; i++)
             {
-                int max = 0;
                 int[] possibility = impossible[i];
-
-                foreach (int[] outcome in outcomes)
+                int[] outcomeCounts = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                foreach (int[] solution in guesses)
                 {
-                    int count = 0;
-
-                    foreach (int[] solution in guesses)
-                    {
-                        int[] compare = new int[] { 1, 1, 1, 1 };
-                        if (game != 1)
-                            compare = Compare(possibility, solution);
-                        else
-                            compare = CompareAlt(possibility, solution);
-                        if (compare[0] == outcome[0] && compare[1] == outcome[1])
-                            count++;
-                    }
-                    if (count > max)
-                        max = count;
+                    int[] compare = new int[] { 1, 1, 1, 1 };
+                    if (game != 1)
+                        compare = Compare(possibility, solution);
+                    else
+                        compare = CompareAlt(possibility, solution);
+                    #region Hefty If/Else Statement
+                    if (compare.SequenceEqual(new int[] { 0, 0 }))
+                        outcomeCounts[0]++;
+                    else if (compare.SequenceEqual(new int[] { 0, 1 }))
+                        outcomeCounts[1]++;
+                    else if (compare.SequenceEqual(new int[] { 0, 2 }))
+                        outcomeCounts[2]++;
+                    else if (compare.SequenceEqual(new int[] { 0, 3 }))
+                        outcomeCounts[3]++;
+                    else if (compare.SequenceEqual(new int[] { 0, 4 }))
+                        outcomeCounts[4]++;
+                    else if (compare.SequenceEqual(new int[] { 1, 0 }))
+                        outcomeCounts[5]++;
+                    else if (compare.SequenceEqual(new int[] { 1, 1 }))
+                        outcomeCounts[6]++;
+                    else if (compare.SequenceEqual(new int[] { 1, 2 }))
+                        outcomeCounts[7]++;
+                    else if (compare.SequenceEqual(new int[] { 1, 3 }))
+                        outcomeCounts[8]++;
+                    else if (compare.SequenceEqual(new int[] { 2, 0 }))
+                        outcomeCounts[9]++;
+                    else if (compare.SequenceEqual(new int[] { 2, 1 }))
+                        outcomeCounts[10]++;
+                    else if (compare.SequenceEqual(new int[] { 2, 2 }))
+                        outcomeCounts[11]++;
+                    else if (compare.SequenceEqual(new int[] { 3, 0 }))
+                        outcomeCounts[12]++;
+                    else if (compare.SequenceEqual(new int[] { 4, 0 }))
+                        outcomeCounts[13]++;
+                    #endregion
                 }
+                int max = outcomeCounts.Max();
                 if (max < min)
                 {
                     min = max;
                     mindex2 = i;
                 }
             }
-                // once this is complete, return guesses[mindex]
+            // once this is complete, return guesses[mindex]
             return (mindex2 == -1 ? guesses.Pop(mindex) : impossible.Pop(mindex2));
         }
-
         public void Solve()
         {
             Reset();
