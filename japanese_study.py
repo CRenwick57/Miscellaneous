@@ -110,6 +110,8 @@ dict_vocab = {
     'aruite'        :   'on foot',
     'hito'          :   'person',
     'tomodachi'     :   'friend',
+    'kare'          :   'boyfriend',
+    'kanojo'        :   'girlfriend',
     'kazoku'        :   'family',
     'hitoride'      :   'alone',
     'senshuu'       :   'last week',
@@ -158,8 +160,6 @@ dict_vocab = {
     'issho'         :   'together',
     'itsumo'        :   'usually',
     'tokidoki'      :   'sometimes',
-    'kare'          :   'boyfriend',
-    'kanojo'        :   'girlfriend',
     #Lesson 7
     'kirimasu'      :   'cut',
     'okurimasu'     :   'send',
@@ -212,15 +212,40 @@ dict_vocab = {
     'goshujin'      :   'husband (other)',
 
     }
+    
+l1 = ['gakusei','kaishain','shain','ginkouin','isha','kenkyuusha','daigaku','byouin']
+l2 = ['hon','jisho','zasshi','shinbun','nooto','techou','meishi','kaado','enpitsu','boorupen','kagi','tokei','kasa','kaban','terebi','rajio','kuruma','tsukue','isu','miyage']
+l3 = ['kyoushitsu','shokudou','jimusho','kaigishitsu','uketsuke','heya','toire','kaidan','jidouhanbaiki','denwa','kuni','kaisha','uchi','kutsu','uriba','chika','ikura','hyaku','sen','man']
+l4 = ['okimasu','nemasu','hatarakimasu','yasumimasu','benkyoushimasu','owarimasu','ginkou','yuubinkyaku','toshokan','bijutsukan','ima','gozen','gogo','asa','hiru','ban','yoru','ototoi','kinou','kyou','ashita','asatte','kesa','konban','yasumi','hiruyasumi','shiken','kaigi','eiga','maiasa','maiban','mainichi','getsuyoubi','kayoubi','suiyoubi','mokuyoubi','kinyoubi','doyoubi','nichiyoubi']
+l5 = ['ikimasu','kimasu','kaerimasu','gakkou','eki','hikouki','fune','densha','chikatetsu','jidensha','aruite','hito','tomodachi','kare','kanojo','kazoku','hitoride','senshuu','konshuu','raishuu','sengetsu','kongetsu','raigetsu','kyonen','kotoshi','rainen','tanjoubi']
+l6 = ['tabemasu','nomimasu','suimasu','mimasu','kikimasu','yomimasu','kakimasu','kaimasu','torimasu','shimasu','aimasu','gohan','asagohan','hirugohan','bangohan','pan','tamago','niku','sakana','yasai','kudamori','mizu','ocha','gyuunyuu','osake','tabako','tegami','shashin','mise','niwa','shukudai','ohanami','issho','itsumo','tokidoki']
+l7 = ['kirimasu','okurimasu','agemasu','moraimasu','kashimasu','karimasu','oshiemasu','naraimasu','kakemasu','te','hashi','hasami','keetai','meeru','hocchikisu','keshigomu','kami','hana','shatsu','purezento','nimotsu','okane','kippu','mou','mada','haha','chichi','ryoushin','soba','sofu','sofuba','imouto','otouto','ane','ani','kyoudai','tsuma','otto','musume','musuko','kodomo','obaasan','ojiisan','okaasan','otousan','oneesan','oniisan','okusan','goshujin']
 
-def study():
-    study = 'Y'
+lessons = [l1,l2,l3,l4,l5,l6,l7]
 
-    while study != 'n':
+#enter study([1,2,3]) to only study lessons 1, 2, and 3, for example. Leave arguments blank to study all words
+def study(arr=[]):
+    study = True
+    vocab = []
+    jp = ''
+    word = ''
+    last=''
+    if arr:
+        i = 0
+        while i < 7:
+            if i+1 in arr:
+                vocab.extend(lessons[i])
+            i+=1
+    else:
+        for lesson in lessons:
+            vocab.extend(lesson)
+
+    while study:
         kv = random.randint(0,1)
-        jp, en = random.choice(list(dict_vocab.items()))
-        word = jp
-        ans = en
+        while word not in vocab or word == last:
+            jp, en = random.choice(list(dict_vocab.items()))
+            word = jp
+            ans = en
         if kv:
             word = en
             ans = jp
@@ -233,11 +258,12 @@ def study():
         while guess != ans and guess != "skip":
             guess = input()
             if guess == "owarimashita":
-                study = 'n'
+                study = False
                 break
-        if study != 'n' and guess != 'skip':
+        if study and guess != 'skip':
             print('Correct')
+            last = jp;
         if guess == "skip":
             print(ans)
 
-study()
+#study()
